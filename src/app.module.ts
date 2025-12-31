@@ -17,6 +17,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { File } from './file-upload/entities/file.entity';
+import { EventsModule } from './events/events.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -62,6 +65,8 @@ import { File } from './file-upload/entities/file.entity';
     RoleModule,
     AuthModule,
     FileUploadModule,
+    EventsModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [

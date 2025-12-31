@@ -14,6 +14,7 @@ import { Auth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/role/entities/role.entity';
 import { JwtService } from '@nestjs/jwt';
+import { UserEventService } from 'src/event/user-event.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     @InjectRepository(Auth) private authRepository: Repository<Auth>,
     @InjectRepository(Role) private roleRepository: Repository<Role>,
     private jwtService: JwtService,
+    private readonly userEventService: UserEventService,
   ) {}
   async create(createAuthDto: CreateAuthDto): Promise<{ user: Partial<Auth> }> {
     const accountExists = await this.authRepository.findOne({
@@ -47,6 +49,8 @@ export class AuthService {
       role,
     });
     const saveUser = await this.authRepository.save(newUser);
+    //emit user registered event
+    this.userEventService.emitUserRegisteredEvent(saveUser);
 
     const { password, ...userWithoutPassword } = saveUser;
     return {
